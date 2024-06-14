@@ -33,7 +33,7 @@ function App() {
   // Returning JSX to render the component
   return (
     <div>
-      {/* Conditional rendering based on the presence of error */}
+      { /* Conditional rendering based on the presence of error */ }
       {error ? (
         <p>Error: {error}</p>
       ) : (
