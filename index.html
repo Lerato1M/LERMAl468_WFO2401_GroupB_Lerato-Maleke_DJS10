@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJS10 Project</title>
+  <!-- React and ReactDOM libraries -->
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <!-- Babel library for JSX transpilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <!-- React app will be rendered -->
+  <div id="root"></div>
+
+  <!-- The React code script -->
+  <script type="text/babel">
+    // Importing React hooks
+    const { useState, useEffect } = React;
+
+    // functional component named App
+    function App() {
+      // Using useState hook to manage state for posts and error
+      const [posts, setPosts] = useState([]);
+      const [error, setError] = useState(null);
+
+      // Using useEffect hook to fetch posts when component mounts
+      useEffect(() => {
+        fetchPosts();
+      }, []);
+
+      // Function to fetch posts from an API
+      const fetchPosts = () => {
+        // Fetching data from JSONPlaceholder API
+        fetch('https://jsonplaceholder.typicode.com/posts')
+          .then(response => {
+            // Handling errors if response is not OK
+            if (!response.ok) {
+              throw new Error('Failed to fetch');
+            }
+            // Parsing response to JSON
+            return response.json();
+          })
+          // Updating state with fetched posts
+          .then(data => setPosts(data))
+          // Handling errors and updating error state
+          .catch(error => setError(error.message));
+      };
+
+      // Returning JSX to render the component
+      return (
+        <div>
+          {/* Conditional rendering based on the presence of error */}
+          {error ? (
+            <p>Error: {error}</p>
+          ) : (
+            // Mapping over posts array to render each post
+            <ul>
+              {posts.map((post, index) => (
+                <li key={post.id}>
+                  <h3>{post.title}</h3>
+                  <p>{post.body}</p>
+                  {/* Adding a heading in bold in the middle of the API posts */}
+                  {index === Math.floor(posts.length / 2) ? <h2 style={{ fontWeight: 'bold' }}>Middle Heading</h2> : null}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
+
+    // Rendering the App component to the DOM
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
